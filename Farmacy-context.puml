@@ -1,5 +1,5 @@
 @startuml FarmacyContext
-!include c4/C4_Context.puml
+!include https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/release/1-0/C4_Context.puml
 LAYOUT_TOP_DOWN
 Person(customer, "Customer", "A customer of Farmacy Food")
 
