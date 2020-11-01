@@ -1,0 +1,28 @@
+@startuml FarmacyContext
+!include c4/C4_Context.puml
+LAYOUT_TOP_DOWN
+Person(customer, "Customer", "A customer of Farmacy Food")
+
+Enterprise_Boundary(c0, "Farmacy Food System") {
+    System(mobileApp, "Ecommerce System", "Allows customers to buy products online")
+    System(smartFridge, "Smart Fridge", "Allows customers to buy products at kiosks")
+    System(pos, "Toast POS", "Allows customer to pay for products at kiosks")
+}
+
+System(cheftec, "ChefTec", "Inventory Procurement")
+System(payment, "Payment Engine", "Processes credit card payments on behalf of Farmacy Food.")
+System(quickbook, "QuickBooks", "Accounting software for Farmacy food")
+
+Rel_L(customer, mobileApp, "Discovers and Orders product using")
+Rel_L(customer, smartFridge, "Purchases product at Coffeshop using")
+Rel_L(smartFridge, pos, "Enables payment using")
+
+Rel_D(mobileApp, payment, "Process credit card using")
+Rel_D(mobileApp, quickbook, "Generate invoice using")
+Rel_D(pos, quickbook, "Generate invoice using")
+
+
+Rel_D(mobileApp, cheftec, "Update inventory status in")
+Rel_D(pos, cheftec, "Update inventory status in")
+
+@enduml
