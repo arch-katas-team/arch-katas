@@ -1,0 +1,56 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+' uncomment the following line and comment the first to use locally
+' !include C4_Component.puml
+
+
+title Component diagram for Farmacy Foods Application
+
+Container(ma, "Mobile App", "Flutter", "Provides functionality to customers to select and purchase product")
+ContainerDb(ordersdb, "Database", "Relational Database Schema", "Stores purchase history for a customer for analytics and personalisation")
+ContainerDb(menucache, "Replicated cache", "Redis", "Caches menu details from cheftec with some expiry")
+ContainerDb(couponsdb, "Database", "MongoDB", "Stores coupons/promotions details")
+Container(ca, "Web App", "React SPA", "Provides functionality for admin to author coupons")
+
+System_Ext(chefTec, "ChefTec inventory management", "Inventory management / supply purchase etc")
+System_Ext(smf, "Smartfridge management", "Publishes inventory levels in individual smart fridges")
+System_Ext(pos, "Toast POS", "POS at kiosk")
+System_Ext(qb, "Accounting software", "Quick book")
+System_Ext(survey, "Third Party survey software to send survey in emails", "Survey Monkey")
+
+
+
+Container_Boundary(api, "Farmacy food backend") {
+    Component(sign, "Auth service", "Spring boot microservice", "Allows users to sign in using social sites")
+    Component(mediator, "Event Mediator", "Spring Integration service", "A service to orechesrate purchase events in the system")
+    Component(bff, "BFF service", "Spring boot microservice", "A service to orchestrate between diff. core service")
+    Component(chefTecfacade, "chefTech Facade", "Spring boot microservice", "A facade onto the chefTec system.")
+    Component(accountingfacade, "accounting Facade", "Spring boot microservice", "A facade onto the quick books system.")
+    Component(couponssvc, "coupons service", "Spring boot microservice", "A service to create/validate/claim coupons")
+    Component(orderHistorysvc, "order History service", "Spring boot microservice", "A service to update order history for a service")
+
+    Rel(mediator, chefTecfacade, "sends purchase event in queue", "async, JSON/HTTPS")
+    Rel(mediator, accountingfacade, "broadcasts purchase event", "async, JSON/HTTPS")
+    Rel(mediator, survey, "broadcasts purchase event", "async, JSON/HTTPS")
+    Rel(mediator, orderHistorysvc, "broadcasts purchase event", "async, JSON/HTTPS")
+    Rel(accountingfacade, qb, "Send purchase details for accounting", "JSON/HTTPS")
+
+    Rel(chefTecfacade,chefTec, "Updates inventory status using", "JSON/HTTPS")
+    Rel(orderHistorysvc,ordersdb, "Updates order details", "JSON/HTTPS")
+    Rel(survey,orderHistorysvc, "Updates product ratings from survey", "JSON/HTTPS/CSVFiles")
+
+    Rel(chefTecfacade,chefTec, "Get menu for day/location", "JSON/HTTPS")
+    Rel(chefTecfacade,menucache, "Populate menu cache")
+    
+    Rel(couponssvc,couponsdb, "create/update coupons")
+    Rel(bff,chefTecfacade, "get menu items")
+    Rel(bff,couponssvc, "get coupons for given menu items")
+}
+
+Rel(ma, bff, "Get menu items and related coupons", "JSON/HTTPS")
+Rel(ca, couponssvc, "Create coupon", "JSON/HTTPS")
+Rel(smf, mediator, "Uses a callback api for each purchase", "JSON/HTTPS")
+Rel(ma, mediator, "Purchase completed successfully", "JSON/HTTPS")
+Rel(pos, mediator, "Uses a callback api for each purchase", "JSON/HTTPS")
+
+@enduml
