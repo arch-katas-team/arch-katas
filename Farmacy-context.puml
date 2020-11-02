@@ -4,8 +4,9 @@ LAYOUT_TOP_DOWN
 Person(customer, "Customer", "A customer of Farmacy Food")
 
 Enterprise_Boundary(c0, "Farmacy Food System") {
-    System(mobileApp, "Ecommerce System", "Allows customers to buy products online")
+    System(ecommerce, "Ecommerce System", "Allows customers to buy products online")
     System(smartFridge, "Smart Fridge", "Allows customers to buy products at kiosks")
+    Person(kioskManager, "Kiosk manager", "")
     System(pos, "Toast POS", "Allows customer to pay for products at kiosks")
 }
 
@@ -13,16 +14,18 @@ System(cheftec, "ChefTec", "Inventory Procurement")
 System(payment, "Payment Engine", "Processes credit card payments on behalf of Farmacy Food.")
 System(quickbook, "QuickBooks", "Accounting software for Farmacy food")
 
-Rel_L(customer, mobileApp, "Discovers and Orders product using")
+Rel_L(customer, ecommerce, "Discovers and Orders product using")
 Rel_L(customer, smartFridge, "Purchases product at Coffeshop using")
-Rel_L(smartFridge, pos, "Enables payment using")
+Rel_L(customer, kioskManager, "Purchases product manually")
+Rel_L(kioskManager, pos, "Enables payment using")
 
-Rel_D(mobileApp, payment, "Process credit card using")
-Rel_D(mobileApp, quickbook, "Generate invoice using")
-Rel_D(pos, quickbook, "Generate invoice using")
+Rel_D(ecommerce, payment, "Process credit card using")
+Rel_D(ecommerce, quickbook, "Generate invoice using")
+Rel_D(pos, ecommerce, "Update inventory status using")
+Rel_D(smartFridge, ecommerce, "Update inventory status using")
 
 
-Rel_D(mobileApp, cheftec, "Update inventory status in")
-Rel_D(pos, cheftec, "Update inventory status in")
+
+Rel_D(ecommerce, cheftec, "Update inventory status in")
 
 @enduml
