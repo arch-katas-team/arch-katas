@@ -8,7 +8,7 @@ Accepted
 The "ghost kitchen" requires a web/modbile app as well as an integration with smart fridges and POS systems to complete a transaction.
 There is a need for interoperablility among heternogeneous systems while being cost effective.
 
-## Descision
+## Decision
 
 Microservice architecture seems to be a suitable choice.
 
