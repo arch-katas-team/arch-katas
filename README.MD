@@ -4,3 +4,12 @@
 Source: [C4_Context Diagram ](Farmacy-context.puml)
 
 ![Context diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/cornucopious-madlads-arch-katas/arch-katas/main/Farmacy-context.puml)
+
+
+
+
+## Component Diagram for Farmacy Food
+
+Source: [C4_Component Diagram ](Farmacy-component.puml)
+
+![Context diagram](http://www.plantuml.com/plantuml/proxy?cache=no&src=https://raw.githubusercontent.com/cornucopious-madlads-arch-katas/arch-katas/main/Farmacy-component.puml)
